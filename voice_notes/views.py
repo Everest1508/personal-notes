@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from openai import OpenAI
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .models import VoiceNote
 from .serializers import VoiceNoteSerializer, SummarizeRequestSerializer
 
@@ -15,6 +17,21 @@ class VoiceNoteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return VoiceNote.objects.filter(user=self.request.user)
     
+    @swagger_auto_schema(
+        method='post',
+        request_body=SummarizeRequestSerializer,
+        responses={
+            200: openapi.Response('Summary generated successfully', openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'summary': openapi.Schema(type=openapi.TYPE_STRING, description='Generated summary from OpenAI'),
+                }
+            )),
+            400: 'Bad request - Invalid data',
+            500: 'Internal server error - OpenAI API error'
+        },
+        operation_description="Summarize a voice note using OpenAI API. Send the transcribed text in the request body."
+    )
     @action(detail=True, methods=['post'])
     def summarize(self, request, pk=None):
         voice_note = self.get_object()

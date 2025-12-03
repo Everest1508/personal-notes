@@ -1,0 +1,650 @@
+{
+	"info": {
+		"_postman_id": "personal-notes-api",
+		"name": "Personal Notes API",
+		"description": "Complete API collection for Personal Notes application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ritesh\",\n  \"email\": \"ritesh@example.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register", ""]
+						},
+						"description": "Register a new user"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"ritesh@example.com\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login", ""]
+						},
+						"description": "Login and get JWT token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Voice Notes",
+			"item": [
+				{
+					"name": "Create Voice Note",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "My Voice Note",
+									"type": "text"
+								},
+								{
+									"key": "audio",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "date",
+									"value": "2025-12-03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/voice-notes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice-notes", ""]
+						},
+						"description": "Create a new voice note with audio file"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Voice Notes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/voice-notes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice-notes", ""]
+						},
+						"description": "Get all voice notes for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Voice Note",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/voice-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice-notes", "1", ""]
+						},
+						"description": "Get a single voice note by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Voice Note",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Updated Title",
+									"type": "text"
+								},
+								{
+									"key": "audio",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "date",
+									"value": "2025-12-03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/voice-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice-notes", "1", ""]
+						},
+						"description": "Update a voice note (audio file is optional)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Voice Note",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/voice-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice-notes", "1", ""]
+						},
+						"description": "Delete a voice note"
+					},
+					"response": []
+				},
+				{
+					"name": "Summarize Voice Note",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"This is the transcribed text from the audio file that needs to be summarized. It can be a long text that you want to get a concise summary of.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/voice-notes/1/summarize/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "voice-notes", "1", "summarize", ""]
+						},
+						"description": "Summarize a voice note using OpenAI API. Send the transcribed text in the request body."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image Notes",
+			"item": [
+				{
+					"name": "Create Image Note",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "description",
+									"value": "Picnic day",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/image-notes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "image-notes", ""]
+						},
+						"description": "Create a new image note"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Image Notes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/image-notes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "image-notes", ""]
+						},
+						"description": "Get all image notes for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Image Note",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/image-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "image-notes", "1", ""]
+						},
+						"description": "Get a single image note by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Image Note",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "description",
+									"value": "Updated description",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/image-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "image-notes", "1", ""]
+						},
+						"description": "Update an image note"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image Note",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/image-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "image-notes", "1", ""]
+						},
+						"description": "Delete an image note"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Text Notes",
+			"item": [
+				{
+					"name": "Create Text Note",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Shopping List\",\n  \"description\": \"Eggs, Milk, Bread\",\n  \"date\": \"2025-12-03\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/text-notes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "text-notes", ""]
+						},
+						"description": "Create a new text note"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Text Notes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/text-notes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "text-notes", ""]
+						},
+						"description": "Get all text notes for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Text Note",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/text-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "text-notes", "1", ""]
+						},
+						"description": "Get a single text note by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Text Note",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Title\",\n  \"description\": \"Updated content\",\n  \"date\": \"2025-12-03\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/text-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "text-notes", "1", ""]
+						},
+						"description": "Update a text note"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Text Note",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/text-notes/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "text-notes", "1", ""]
+						},
+						"description": "Delete a text note"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Saved URLs",
+			"item": [
+				{
+					"name": "Create Saved URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"YouTube\",\n  \"link\": \"https://youtube.com\",\n  \"date\": \"2025-12-03\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/saved-urls/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "saved-urls", ""]
+						},
+						"description": "Create a new saved URL (bookmark)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Saved URLs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/saved-urls/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "saved-urls", ""]
+						},
+						"description": "Get all saved URLs for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Saved URL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/saved-urls/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "saved-urls", "1", ""]
+						},
+						"description": "Get a single saved URL by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Saved URL",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Title\",\n  \"link\": \"https://updated-link.com\",\n  \"date\": \"2025-12-03\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/saved-urls/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "saved-urls", "1", ""]
+						},
+						"description": "Update a saved URL"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Saved URL",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/saved-urls/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "saved-urls", "1", ""]
+						},
+						"description": "Delete a saved URL"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Go to gym\",\n  \"date\": \"2025-12-03\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tasks/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tasks", ""]
+						},
+						"description": "Create a new task"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tasks/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tasks", ""]
+						},
+						"description": "Get all tasks for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tasks/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tasks", "1", ""]
+						},
+						"description": "Get a single task by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Gym workout\",\n  \"date\": \"2025-12-03\",\n  \"completed\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tasks/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tasks", "1", ""]
+						},
+						"description": "Update a task (mark as completed, change title, etc.)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tasks/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tasks", "1", ""]
+						},
+						"description": "Delete a task"
+					},
+					"response": []
+				},
+				{
+					"name": "Carry Forward Incomplete Tasks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tasks/carry-forward/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tasks", "carry-forward", ""]
+						},
+						"description": "Move all incomplete tasks to the next day"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+
