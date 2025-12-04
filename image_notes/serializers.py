@@ -5,10 +5,10 @@ from .models import ImageNote
 class ImageNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageNote
-        fields = ['id', 'photo', 'description', 'date', 'created_at', 'updated_at']
+        fields = ['id', 'photo', 'description',
+                  'date', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
-    
+
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
-

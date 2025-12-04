@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -160,7 +162,6 @@ REST_FRAMEWORK = {
 }
 
 # JWT Settings
-from datetime import timedelta
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -171,7 +172,6 @@ SIMPLE_JWT = {
 # OpenAI API Key
 # Set this in your environment variable or add it here
 # For production, use environment variables: export OPENAI_API_KEY='your-key-here'
-import os
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
 
 # Swagger/OpenAPI Settings
