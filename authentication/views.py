@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .serializers import UserSerializer, RegisterSerializer
+from .models import User
 
 
 @swagger_auto_schema(
@@ -60,21 +61,34 @@ def register(request):
 def login(request):
     email = request.data.get('email')
     password = request.data.get('password')
-
+    
     if not email or not password:
         return Response(
             {'error': 'Email and password are required'},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+    
+    # Try to authenticate with plain email first
     user = authenticate(username=email, password=password)
-
+    
+    # If not found, try to find by decrypted email
+    if user is None:
+        try:
+            users = User.objects.all()
+            for u in users:
+                if u.decrypted_email == email:
+                    if u.check_password(password):
+                        user = u
+                        break
+        except:
+            pass
+    
     if user is None:
         return Response(
             {'error': 'Invalid credentials'},
             status=status.HTTP_401_UNAUTHORIZED
         )
-
+    
     refresh = RefreshToken.for_user(user)
     return Response({
         'token': str(refresh.access_token),

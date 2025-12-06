@@ -69,8 +69,8 @@ class VoiceNoteViewSet(viewsets.ModelViewSet):
             )
 
             summary = response.choices[0].message.content.strip()
-
-            # Save summary to voice note
+            
+            # Save summary to voice note (will be encrypted automatically on save)
             voice_note.summary = summary
             voice_note.save()
 

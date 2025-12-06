@@ -4,10 +4,21 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    
     class Meta:
         model = User
         fields = ['id', 'name', 'email']
         read_only_fields = ['id']
+    
+    def get_name(self, obj):
+        """Return decrypted name"""
+        return obj.decrypted_name
+    
+    def get_email(self, obj):
+        """Return decrypted email"""
+        return obj.decrypted_email
 
 
 class RegisterSerializer(serializers.ModelSerializer):

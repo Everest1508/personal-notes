@@ -175,6 +175,12 @@ SIMPLE_JWT = {
 # For production, use environment variables: export OPENAI_API_KEY='your-key-here'
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
 
+# Encryption Secret Key
+# Set this in your environment variable for production
+# For production, use: export ENCRYPTION_SECRET_KEY='your-encryption-secret-key-here'
+# If not set, will use SECRET_KEY as fallback
+ENCRYPTION_SECRET_KEY = os.environ.get('ENCRYPTION_SECRET_KEY', SECRET_KEY)
+
 # Swagger/OpenAPI Settings
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
